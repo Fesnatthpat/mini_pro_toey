@@ -1,3 +1,15 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+if (!isset($_SESSION['admin_login'])) {
+    $_SESSION['error'] = 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้';
+    header("location: index.php");
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -15,14 +27,38 @@
             <div class="box2">
                 <h1 class="text-teacher">ข้อมูลนักเรียน</h1>
                 <hr>
-                <div>
+                <form action="sign_up_student_db.php" method="POST" enctype="multipart/form-data">
+                    <?php if (isset($_SESSION['error'])) { ?>
+                        <div class="alert-danger">
+                            <?php
+                            echo $_SESSION['error'];
+                            unset($_SESSION['error']);
+                            ?>
+                        </div>
+                    <?php } ?>
+                    <?php if (isset($_SESSION['success'])) { ?>
+                        <div class="alert-success">
+                            <?php
+                            echo $_SESSION['success'];
+                            unset($_SESSION['success']);
+                            ?>
+                        </div>
+                    <?php } ?>
+                    <?php if (isset($_SESSION['warning'])) { ?>
+                        <div class="alert-warning">
+                            <?php
+                            echo $_SESSION['warning'];
+                            unset($_SESSION['warning']);
+                            ?>
+                        </div>
+                    <?php } ?>
                     <div class="form-group">
                         <label for="student-id">รหัสประจำตัว</label>
-                        <input type="text" id="student-id" name="student-id">
+                        <input type="text" id="s_code" name="s_code">
                     </div>
                     <div class="form-group">
                         <label for="name">ชื่อ-นามสกุล</label>
-                        <input type="text" id="name" name="name">
+                        <input type="text" id="fullname" name="fullname">
                     </div>
                     <div class="form-group">
                         <label for="phone">เบอร์โทร</label>
@@ -32,14 +68,15 @@
                         <label for="level">ระดับชั้น</label>
                         <select id="level" name="level">
                             <option value="">เลือกระดับชั้น</option>
-                            <option value="1">ม.1</option>
-                            <option value="2">ม.2</option>
-                            <option value="3">ม.3</option>
+                            <option value="ม.1">ม.1</option>
+                            <option value="ม.2">ม.2</option>
+                            <option value="ม.3">ม.3</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="photo">รูปถ่าย</label>
-                        <input type="file" id="photo" name="photo">
+                        <p>image/gif, image/jpeg, image/png</p>
+                        <input type="file" id="photo" name="photo" accept="image/gif, image/jpeg, image/png">
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
@@ -51,13 +88,13 @@
                     </div>
                     <div class="btn-con">
                         <div class="btn-submit">
-                            <button  type="submit">บันทึกข้อมูล</button>
+                            <button type="submit" name="signupstudent">บันทึกข้อมูล</button>
                         </div>
                         <div class="btn-out">
-                            <button onclick="window.location.href='data-student.php'">ออก</button>
+                            <button href='data-student.php'>ออก</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

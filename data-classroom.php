@@ -1,3 +1,28 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+if (!isset($_SESSION['admin_login'])) {
+    $_SESSION['error'] = 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้';
+    header("location: index.php");
+    exit();
+}
+
+try {
+    $stmt = $pdo->prepare("SELECT * FROM building");
+    $stmt->execute();
+    $buildingData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -20,20 +45,22 @@
                 <div class="search-form">
                     <div class="form-group">
                         <label for="search-name">หมายเลขห้อง</label>
-                        <input type="text" id="search-name" name="search-name">
+                        <input type="text" id="room_no" name="room_no">
                     </div>
                     <div class="form-group">
                         <label for="search-level">อาคาร</label>
-                        <select id="search-level" name="search-level">
+                        <select id="building" name="building">
                             <option value="">เลือกอาคาร</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
+                            <?php foreach ($buildingData as $building) { ?>
+                                <option value="<?php echo htmlspecialchars($building['building_name']); ?>">
+                                    <?php echo htmlspecialchars($building['building_name']); ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="search-level">ชั้น</label>
-                        <select id="search-level" name="search-level">
+                        <select id="floot" name="floot">
                             <option value="">เลือกชั้น</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -63,27 +90,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>A001</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>A</td>
-                                    <td>2</td>
-                                    <td><a href="edit_classroom.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>A002</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>B</td>
-                                    <td>3</td>
-                                    <td><a href="edit_classroom.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>A003</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>C</td>
-                                    <td>1</td>
-                                    <td><a href="edit_classroom.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
+                                <?php
+                                $stmt = $pdo->prepare("SELECT * FROM room");
+                                $stmt->execute();
+                                $roomData = $stmt->fetchAll();
+
+                                if (!$roomData) {
+                                    echo "ไม่มีข้อมูล";
+                                } else {
+                                    foreach ($roomData as $rooms) {
+
+
+
+                                ?>
+                                        <tr>
+                                            <td><?= $rooms['room_no'] ?></td>
+                                            <td><img width="40px" src="uploads_classroom/<?= $rooms['photo'] ?>" alt="รูปถ่าย"></td>
+                                            <td><?= $rooms['building'] ?></td>
+                                            <td><?= $rooms['floot'] ?></td>
+                                            <td><a href="edit_classroom.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
+                                        </tr>
+                                <?php
+                                    }
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>

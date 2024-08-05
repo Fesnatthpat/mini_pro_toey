@@ -1,3 +1,17 @@
+<?php
+
+session_start();
+require_once 'config/db.php';
+
+if (!isset($_SESSION['admin_login'])) {
+    $_SESSION['error'] = 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้';
+    header("location: index.php");
+    exit();
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -55,39 +69,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>S001</td>
-                                    <td>ดช.มานะ เรียนดี</td>
-                                    <td><img src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>081 123 4567</td>
-                                    <td>ม.1</td>
-                                    <td><a href="edit_student.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>S002</td>
-                                    <td>ดญ.สวยงาม ศรีสง่า</td>
-                                    <td><img src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>081 253 4785</td>
-                                    <td>ม.3</td>
-                                    <td><a href="edit_student.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>S003</td>
-                                    <td>ดช.เลิศศักดิ์ สุขเกิน</td>
-                                    <td><img src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>086 425 0054</td>
-                                    <td>ม.4</td>
-                                    <td><a href="edit_student.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>S003</td>
-                                    <td>ดช.เลิศศักดิ์ สุขเกิน</td>
-                                    <td><img src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>086 425 0054</td>
-                                    <td>ม.5</td>
-                                    <td><a href="edit_student.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
+                                <?php
+                                $stmt = $pdo->prepare("SELECT * FROM student");
+                                $stmt->execute();
+                                $studentData = $stmt->fetchAll();
 
+                                if (!$studentData) {
+                                    echo "ไม่มีข้อมูล";
+                                } else {
+                                    foreach ($studentData as $student) {
+
+
+
+                                ?>
+                                        <tr>
+                                            <td><?= $student['s_code'] ?></td>
+                                            <td><?= $student['fullname'] ?></td>
+                                            <td><img src="uploads_student/<?= $student['photo'] ?>" alt="รูปถ่าย"></td>
+                                            <td><?= $student['phone'] ?></td>
+                                            <td><?= $student['level'] ?></td>
+                                            <td><a href="edit_student.php"><i class="fa-solid fa-pen"></i></a> |
+                                                <a href="#"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+
+                                <?php
+                                    }
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>

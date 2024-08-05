@@ -1,3 +1,30 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+if (!isset($_SESSION['admin_login'])) {
+    $_SESSION['error'] = 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้';
+    header("location: index.php");
+    exit;
+}
+
+    $stmt = $pdo->prepare("SELECT subj_group_name FROM subject_group");
+    $stmt->execute();
+    $subjectGroups = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// try {
+//     $stmt = $pdo->prepare("SELECT subj_group_name FROM subject_group");
+//     $stmt->execute();
+//     $subjectGroups = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// } catch (PDOException $e) {
+//     echo "Error: " . $e->getMessage();
+// }
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -36,10 +63,11 @@
                         <label for="search-level">กลุ่มวิชาที่สอน</label>
                         <select id="search-level" name="search-level">
                             <option value="">เลือกกลุ่มวิชา</option>
-                            <option value="1">คณิตศาสตร์</option>
-                            <option value="2">วิทยาศาสตร์</option>
-                            <option value="3">ภาษา</option>
-                            <option value="3">สังคมศาสตร์</option>
+                            <?php foreach ($subjectGroups as $group) { ?>
+                                <option value="<?php echo htmlspecialchars($group['subj_group_name']); ?>">
+                                    <?php echo htmlspecialchars($group['subj_group_name']); ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -66,39 +94,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>S001</td>
-                                    <td>ดช.มานะ เรียนดี</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>081 123 4567</td>
-                                    <td>คณิตศาสตร์</td>
-                                    <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>S002</td>
-                                    <td>ดญ.สวยงาม ศรีสง่า</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>081 253 4785</td>
-                                    <td>ภาษา</td>
-                                    <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>S003</td>
-                                    <td>ดช.เลิศศักดิ์ สุขเกิน</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>086 425 0054</td>
-                                    <td>วิทยาศาสตร์</td>
-                                    <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <td>S003</td>
-                                    <td>ดช.เลิศศักดิ์ สุขเกิน</td>
-                                    <td><img width="40px" src="https://plus.unsplash.com/premium_photo-1675130119373-61ada6685d63?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="รูปถ่าย"></td>
-                                    <td>086 425 0054</td>
-                                    <td>วิทยาศาสตร์</td>
-                                    <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
-                                </tr>
+                                <?php
+                                $stmt = $pdo->prepare("SELECT * FROM subject");
+                                $stmt->execute();
+                                $subjectData = $stmt->fetchAll();
 
+                                if (!$subjectData) {
+                                    echo "ไม่มีข้อมูล";
+                                } else {
+                                    foreach ($subjectData as $subject) {
+
+
+                                ?>
+                                        <tr>
+                                            <td><?= $subject['subject_code'] ?></td>
+                                            <td><?= $subject['subject_name'] ?></td>
+                                            <td><img width="40px" src="uploads_subject2/<?= $subject['photo'] ?>" alt="รูปถ่าย"></td>
+                                            <td><?= $subject['subject_group'] ?></td>
+                                            <td><?= $subject['level'] ?></td>
+                                            <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
+                                        </tr>
+                                <?php
+                                    }
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>

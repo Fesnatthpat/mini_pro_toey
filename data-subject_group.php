@@ -65,7 +65,7 @@ if (!isset($_SESSION['admin_login'])) {
                     </div>
                 <?php } ?>
                 <div class="btn-con">
-                    <button class="add-student-button" onclick="window.location.href='add-subject_group.php'">+ กลุ่มวิชา</button>
+                    <!-- <button class="add-student-button" onclick="window.location.href='add-subject_group.php'">+ กลุ่มวิชา</button> -->
                     <button class="out-student-button" onclick="window.location.href='home.php'">ออก</button>
                 </div>
 
