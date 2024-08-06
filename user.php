@@ -23,19 +23,7 @@ if (!isset($_SESSION['user_login'])) {
 
 <body>
     <div class="container">
-        <h2 class="text-1">ระบบบริหารจัดการข้อมูล</h2>
-        <nav class="nav-con">
-            <ul class="menu-con">
-                <li><a href="teacher.php">ข้อมูลคุณครู</a></li>
-                <li><a href="data-student.php">ข้อมูลนักเรียน</a></li>
-                <li><a href="data-subject_group.php">ข้อมูลรายวิชา</a></li>
-                <li><a href="data-classroom.php">ข้อมูลห้องเรียน</a></li>
-                <li><a href="Tutorial-Schedule.php">ข้อมูลตารางสอน</a></li>
-                <li><a href="data-subject.php">ข้อมูลกลุ่มวิชา</a></li>
-                <li><a href="building.php">ข้อมูลอาคารเรียน</a></li>
-            </ul>
-        </nav>
-
+        <h2 class="text-1">ตารางสอนคุณครู</h2>
         <div class="profile-container">
             <div class="profile-con1">
                 <div class="profile-con2">
@@ -51,7 +39,7 @@ if (!isset($_SESSION['user_login'])) {
                             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
                             if ($userData) {
-                                $photo = !empty($userData['photo']) ? 'uploads/' . htmlspecialchars($adminData['photo']) : 'default.png'; // กำหนด default รูปภาพ
+                                $photo = !empty($userData['photo']) ? 'uploads/' . htmlspecialchars($userData['photo']) : 'default.png'; // กำหนด default รูปภาพ
                                 echo "<img src=\"$photo\" alt=\"Profile Picture\">";
                                 echo "<h3>" . htmlspecialchars($userData['fullname']) . "</h3>";
                                 echo "<h3>" . htmlspecialchars($userData['t_code']) . "</h3>";
