@@ -102,7 +102,7 @@ if (!isset($_SESSION['admin_login'])) {
                             <button name="signupteacher">บันทึกข้อมูล</button>
                         </div>
                         <div class="btn-out">
-                            <button onclick="window.location.href='teacher.php'">ออก</button>
+                        <button type="button" onclick="history.back()">ออก</button>
                         </div>
                     </div>
                 </form>

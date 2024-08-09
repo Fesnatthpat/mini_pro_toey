@@ -18,8 +18,6 @@ try {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="th">
 
@@ -76,10 +74,33 @@ try {
                                     <th>เบอร์โทร</th>
                                     <th>กลุ่มวิชาที่สอน</th>
                                     <th>การจัดการ</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php if (isset($_SESSION['error'])) { ?>
+                                    <div class="alert-danger">
+                                        <?php
+                                        echo $_SESSION['error'];
+                                        unset($_SESSION['error']);
+                                        ?>
+                                    </div>
+                                <?php } ?>
+                                <?php if (isset($_SESSION['success'])) { ?>
+                                    <div class="alert-success">
+                                        <?php
+                                        echo $_SESSION['success'];
+                                        unset($_SESSION['success']);
+                                        ?>
+                                    </div>
+                                <?php } ?>
+                                <?php if (isset($_SESSION['warning'])) { ?>
+                                    <div class="alert-warning">
+                                        <?php
+                                        echo $_SESSION['warning'];
+                                        unset($_SESSION['warning']);
+                                        ?>
+                                    </div>
+                                <?php } ?>
                                 <?php
                                 $stmt = $pdo->prepare("SELECT * FROM teacher");
                                 $stmt->execute();
@@ -89,30 +110,28 @@ try {
                                     echo "ไม่มีข้อมูล";
                                 } else {
                                     foreach ($teacherData as $teacher) {
-
-
                                 ?>
                                         <tr>
-                                            <td><?= $teacher['t_code'] ?></td>
-                                            <td><?= $teacher['fullname'] ?></td>
-                                            <td><img width="40px" src="uploads/<?= $teacher['photo'] ?>" alt="รูปถ่าย"></td>
-                                            <td><?= $teacher['phone'] ?></td>
-                                            <td><?= $teacher['subject_group'] ?></td>
-                                            <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
+                                            <td><?= htmlspecialchars($teacher['t_code']); ?></td>
+                                            <td><?= htmlspecialchars($teacher['fullname']); ?></td>
+                                            <td><img width="40px" src="uploads/<?= htmlspecialchars($teacher['photo']); ?>" alt="รูปถ่าย"></td>
+                                            <td><?= htmlspecialchars($teacher['phone']); ?></td>
+                                            <td><?= htmlspecialchars($teacher['subject_group']); ?></td>
+                                            <td>
+                                                <a href="edit_teacher.php?t_id=<?= htmlspecialchars($teacher['t_id']); ?>"><i class="fa-solid fa-pen"></i></a> |
+                                                <a href="delete_tracher_db.php?delete=<?= htmlspecialchars($teacher['t_id']); ?>" onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบ?');"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
                                         </tr>
                                 <?php
                                     }
                                 }
                                 ?>
-
-
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
 </body>
