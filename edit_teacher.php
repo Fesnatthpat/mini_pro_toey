@@ -56,7 +56,7 @@ if (isset($_GET['t_id'])) {
                     <div class="form-group">
                         <label for="subject_group">กลุ่มวิชาที่สอน</label>
                         <select id="subject_group" name="subject_group">
-                            <option value=""><?= htmlspecialchars($data['subject_group']); ?></option>
+                            <option><?= htmlspecialchars($data['subject_group']); ?></option>
                             <?php foreach ($subjectGroups as $group) { ?>
                                 <option value="<?= htmlspecialchars($group['subj_group_name']); ?>">
                                     <?= htmlspecialchars($group['subj_group_name']); ?>

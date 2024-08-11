@@ -99,10 +99,10 @@ try {
                     </div>
                     <div class="btn-con">
                         <div class="btn-submit">
-                            <button type="submit" name="add_subject2">บันทึกข้อมูล</button>
+                            <button type="submit" name="add_subject">บันทึกข้อมูล</button>
                         </div>
                         <div class="btn-out">
-                            <button onclick="window.location.href='data-subject.php'">ออก</button>
+                        <button type="button" onclick="history.back()">ออก</button>
                         </div>
                     </div>
                 </form>

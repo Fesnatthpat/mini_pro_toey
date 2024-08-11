@@ -154,7 +154,8 @@ th,
 td {
     padding: 15px;
     border: 1px solid #ddd;
-    text-align: left;
+    /* text-align: left; */
+    text-align: center;
 }
 
 th {
@@ -165,7 +166,7 @@ th {
 td img {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    /* border-radius: 50%; */
 }
 
 a {

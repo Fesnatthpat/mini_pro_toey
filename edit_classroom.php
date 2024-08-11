@@ -1,3 +1,25 @@
+<?php
+session_start();
+require_once 'config/db.php';
+
+try {
+    $stmt = $pdo->prepare("SELECT building FROM room");
+    $stmt->execute();
+    $dataroom = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+$data = null; // กำหนดค่าเริ่มต้นให้ตัวแปร $data
+
+if (isset($_GET['room_id'])) {
+    $room_id = $_GET['room_id'];
+    $stmt = $pdo->prepare("SELECT * FROM room WHERE room_id = ?");
+    $stmt->execute([$room_id]);
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -15,44 +37,51 @@
             <div class="box2">
                 <h1 class="text-teacher">เพิ่มห้องเรียน</h1>
                 <hr>
-                <div>
+                <form action="edit_classroom_db.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="student-id">หมายเลขห้อง</label>
-                        <input type="text" id="student-id" name="student-id">
+                        <input type="hidden" value="<?= htmlspecialchars($data['room_id']); ?>" name="room_id">
+                        <label for="room_no">หมายเลขห้อง</label>
+                        <input type="text" value="<?= htmlspecialchars($data['room_no']); ?>" name="room_no">
+                        <input type="hidden" value="<?= htmlspecialchars($data['photo']); ?>" name="photo2">
                     </div>
                     <div class="form-group">
-                        <label for="level">อาคารเรียน</label>
-                        <select id="level" name="level">
-                            <option value="">เลือกอาคารเรียน</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
+                        <label for="building">อาคารเรียน</label>
+                        <select name="building">
+                            <option><?= htmlspecialchars($data['building']); ?></option>
+                            <?php foreach ($dataroom as $rooms) { ?>
+                                <option value="<?= htmlspecialchars($rooms['building']); ?>">
+                                    <?= htmlspecialchars($rooms['building']); ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="level">ชั้น</label>
-                        <select id="level" name="level">
-                            <option value="">เลือกชั้น</option>
-                            <option value="">1</option>
-                            <option value="">2</option>
-                            <option value="">3</option>
+                        <label for="floot">ชั้น</label>
+                        <select name="floot" >
+                            <option><?= htmlspecialchars($data['floot']); ?></option>
+                            <?php foreach ($dataroom as $rooms) { ?>
+                                <option value="<?= htmlspecialchars($rooms['floot']); ?>">
+                                    <?= htmlspecialchars($rooms['floot']); ?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="photo">รูปห้องเรียน</label>
-                        <input type="file" id="photo" name="photo">
+                        <input type="file" id="imgInput" name="photo">
+                        <img id="previewImg" src="uploads_classroom/<?= htmlspecialchars($data['photo']); ?>" alt="">
                     </div>
                     <div class="btn-con">
                         <div class="btn-submit">
-                            <button type="submit">บันทึกข้อมูล</button>
+                            <button type="submit" name="update">บันทึกข้อมูล</button>
                         </div>
                         <div class="btn-out">
-                            <button onclick="window.location.href='data-classroom.php'">ออก</button>
+                            <button type="button" onclick="history.back()">ออก</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-
+    <script src="preview_img.js"></script>
 </body>

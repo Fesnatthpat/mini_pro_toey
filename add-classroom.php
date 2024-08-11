@@ -96,7 +96,7 @@ if (!isset($_SESSION['admin_login'])) {
                             <button type="submit" name="add_classroom">บันทึกข้อมูล</button>
                         </div>
                         <div class="btn-out">
-                            <button onclick="window.location.href='data-classroom.php'">ออก</button>
+                        <button type="button" onclick="history.back()">ออก</button>
                         </div>
                     </div>
                 </form>

@@ -8,17 +8,9 @@ if (!isset($_SESSION['admin_login'])) {
     exit;
 }
 
-    $stmt = $pdo->prepare("SELECT subj_group_name FROM subject_group");
-    $stmt->execute();
-    $subjectGroups = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// try {
-//     $stmt = $pdo->prepare("SELECT subj_group_name FROM subject_group");
-//     $stmt->execute();
-//     $subjectGroups = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// } catch (PDOException $e) {
-//     echo "Error: " . $e->getMessage();
-// }
+$stmt = $pdo->prepare("SELECT subj_group_name FROM subject_group");
+$stmt->execute();
+$subjectGroups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -31,7 +23,7 @@ if (!isset($_SESSION['admin_login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ข้อมูลนักเรียน</title>
+    <title>ข้อมูลรายวิชา</title>
     <link rel="stylesheet" href="data-subject.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -79,7 +71,30 @@ if (!isset($_SESSION['admin_login'])) {
                     <button class="add-student-button" onclick="window.location.href='add-subject.php'">+ เพิ่มวิชา</button>
                     <button class="out-student-button" onclick="window.location.href='home.php'">ออก</button>
                 </div>
-
+                <?php if (isset($_SESSION['error'])) { ?>
+                    <div class="alert-danger">
+                        <?php
+                        echo $_SESSION['error'];
+                        unset($_SESSION['error']);
+                        ?>
+                    </div>
+                <?php } ?>
+                <?php if (isset($_SESSION['success'])) { ?>
+                    <div class="alert-success">
+                        <?php
+                        echo $_SESSION['success'];
+                        unset($_SESSION['success']);
+                        ?>
+                    </div>
+                <?php } ?>
+                <?php if (isset($_SESSION['warning'])) { ?>
+                    <div class="alert-warning">
+                        <?php
+                        echo $_SESSION['warning'];
+                        unset($_SESSION['warning']);
+                        ?>
+                    </div>
+                <?php } ?>
                 <div class="group-form1">
                     <div class="group-form2">
                         <table>
@@ -112,7 +127,11 @@ if (!isset($_SESSION['admin_login'])) {
                                             <td><img width="40px" src="uploads_subject2/<?= $subject['photo'] ?>" alt="รูปถ่าย"></td>
                                             <td><?= $subject['subject_group'] ?></td>
                                             <td><?= $subject['level'] ?></td>
-                                            <td><a href="edit_subject.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
+                                            <td>
+                                                <a href="edit_subject.php?subject_id=<?= htmlspecialchars($subject['subject_id']); ?>"><i class="fa-solid fa-pen"></i></a> |
+                                                <a href="delete_subject_db.php?delete=<?= htmlspecialchars($subject['subject_id']); ?>" onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบ?');"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
+                                            </td>
                                         </tr>
                                 <?php
                                     }

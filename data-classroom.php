@@ -76,7 +76,30 @@ try {
                     <button class="add-student-button" onclick="window.location.href='add-classroom.php'">+ เพิ่มห้องเรียน</button>
                     <button class="out-student-button" onclick="window.location.href='home.php'">ออก</button>
                 </div>
-
+                <?php if (isset($_SESSION['error'])) { ?>
+                    <div class="alert-danger">
+                        <?php
+                        echo $_SESSION['error'];
+                        unset($_SESSION['error']);
+                        ?>
+                    </div>
+                <?php } ?>
+                <?php if (isset($_SESSION['success'])) { ?>
+                    <div class="alert-success">
+                        <?php
+                        echo $_SESSION['success'];
+                        unset($_SESSION['success']);
+                        ?>
+                    </div>
+                <?php } ?>
+                <?php if (isset($_SESSION['warning'])) { ?>
+                    <div class="alert-warning">
+                        <?php
+                        echo $_SESSION['warning'];
+                        unset($_SESSION['warning']);
+                        ?>
+                    </div>
+                <?php } ?>
                 <div class="group-form1">
                     <div class="group-form2">
                         <table>
@@ -108,7 +131,10 @@ try {
                                             <td><img width="40px" src="uploads_classroom/<?= $rooms['photo'] ?>" alt="รูปถ่าย"></td>
                                             <td><?= $rooms['building'] ?></td>
                                             <td><?= $rooms['floot'] ?></td>
-                                            <td><a href="edit_classroom.php"><i class="fa-solid fa-pen"></i></a> | <a href="#"><i class="fa-solid fa-trash"></i></a></td>
+                                            <td>
+                                                <a href="edit_classroom.php?room_id=<?= htmlspecialchars($rooms['room_id']); ?>"><i class="fa-solid fa-pen"></i></a> |
+                                                <a href="delete_classroom_db.php?delete=<?= htmlspecialchars($rooms['room_id']); ?>" onclick="return confirm('คุณแน่ใจหรือว่าต้องการลบ?');"><i class="fa-solid fa-trash"></i></a>
+                                            </td>
                                         </tr>
                                 <?php
                                     }
