@@ -2,7 +2,7 @@
 session_start();
 require 'config/db.php';
 
-if (isset($_POST['add_subject2'])) {
+if (isset($_POST['add_subject'])) {
     $subject_code = $_POST['subject_code'];
     $subject_name = $_POST['subject_name'];
     $level = $_POST['level'];
@@ -38,7 +38,7 @@ if (isset($_POST['add_subject2'])) {
 
             if ($data_subject2) {
                 $_SESSION['warning'] = 'มีชื่อวิชานี้อยู่ในระบบแล้ว';
-                header("location: add-subject2.php");
+                header("location: add-subject.php");
                 exit();
             } else {
                 $allow = array('jpg', 'jpeg', 'png');
